@@ -6,15 +6,16 @@ const User = require ('../models/userModel');
 exports.Signup = async (req,res) => {
     try{
         // if the fields of first name, email address or password are left empty, return an error
-        if(!req.body.firstName || !req.body.emailAddress || !req.body.password){
+        if(!req.body.fullName || !req.body.emailAddress || !req.body.password){
             throw new Error('Required information is not provided');
         }
 
         // create a document in Database with the provided information from front-end
         const query = User.create({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
+            fullName: req.body.fullName,
+            telephoneNumber: req.body.telephoneNumber,
             emailAddress: req.body.emailAddress,
+            nickName: req.body.nickName,
             password: pbkdf2.pbkdf2Sync(req.body.password, 'transparency-secret', 1, 32, 'sha512')
         })
         let Signup = await query;
@@ -59,26 +60,5 @@ exports.Login = async (req,res) => {
     catch(err){
         console.log(err);
         res.status(404).json({status: 404, message: 'fail', data: err.message});
-    }
-}
-
-exports.ChatGpt = async (req,res) => {
-    try{
-        const openai = req.body.openai;
-
-        // throw new Error('wait');
-
-        const ress = await openai.createChatCompletion({
-            model: "gpt-3.5-turbo",
-            messages: [{role: "user", content: "Hello GPT"}]
-        });
-
-        console.log(ress.data.choices[0].message.content);
-
-        res.send('working');
-    }
-    catch(err){
-        console.log(err);
-        res.status(404).json({status: '404', message: 'fail'});
     }
 }

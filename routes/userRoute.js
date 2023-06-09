@@ -3,9 +3,9 @@ const controller = require('../controllers/userController');
 
 const router = express.Router();
 
-router
-.route('/chatgpt')
-.post(controller.ChatGpt);
+// router
+// .route('/chatgpt')
+// .post(controller.ChatGpt);
 
 router
 .route('/signup')
