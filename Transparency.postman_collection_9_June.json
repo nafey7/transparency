@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"firstName\": \"User\",\n    \"lastName\": \"2\",\n    \"emailAddress\": \"user2@gmail.com\",\n    \"password\": \"abcd1234\"\n}",
+					"raw": "{\n    \"fullName\": \"User\",\n    \"telephoneNumber\": \"1\",\n    \"nickName\": \"ussss\",\n    \"emailAddress\": \"user1@gmail.com\",\n    \"password\": \"abcd1234\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -59,6 +59,35 @@
 					"path": [
 						"user",
 						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ChatGPT",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"message\": \"Can you tell whether AI will end humans?\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/user/chatgpt",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"user",
+						"chatgpt"
 					]
 				}
 			},
