@@ -7,6 +7,8 @@ const cors = require('cors');
 const { Configuration, OpenAIApi } = require('openai');
 
 const userRoute = require('./routes/userRoute');
+const companyRoute = require('./routes/companyRoute');
+const loginRoute = require('./routes/loginRoute');
 
 const app = express();
 
@@ -53,6 +55,8 @@ app.use((req, res, next) => {
 
 // middlewares for the routes
 app.use('/user', userRoute);
+app.use('/company', companyRoute);
+app.use('/login', loginRoute);
 
 // Initiating the server on a PORT
 const port = process.env.PORT;
