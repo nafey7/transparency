@@ -9,6 +9,7 @@ const { Configuration, OpenAIApi } = require('openai');
 const userRoute = require('./routes/userRoute');
 const companyRoute = require('./routes/companyRoute');
 const loginRoute = require('./routes/loginRoute');
+const sharedRoute = require('./routes/sharedRoute');
 
 const app = express();
 
@@ -45,7 +46,7 @@ app.use((req, res, next) => {
     console.log('The time of the request:', req_time);
     req.body.timeApi = req_time;
 
-    if (req.body.message){
+    if (req.body.launch){
         
         req.body.openai = openai;
     }
@@ -57,6 +58,7 @@ app.use((req, res, next) => {
 app.use('/user', userRoute);
 app.use('/company', companyRoute);
 app.use('/login', loginRoute);
+app.use('/shared', sharedRoute);
 
 // Initiating the server on a PORT
 const port = process.env.PORT;
