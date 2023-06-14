@@ -13,7 +13,7 @@ const loginRoute = require('./routes/loginRoute');
 const app = express();
 
 // Integration of Front-end React.js with our Back-end Express server
-const whitelist = ['http://localhost:3000'];
+const whitelist = ['http://localhost:3000' , 'http://127.0.0.1:5173'];
 const corsOptionsDelegate = function (req, callback) {
     var corsOptions;
     if (whitelist.indexOf(req.header('Origin')) !== -1) {
