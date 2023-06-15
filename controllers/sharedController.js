@@ -1,3 +1,5 @@
+const fetch = require('node-fetch');
+
 exports.GptDescription = async (req,res, next) => {
     try{
         const openai = req.body.openai;
@@ -96,6 +98,81 @@ exports.OrganizeData = async (req,res) => {
         // res.status(200).json({status:200, message: 'success', themes: themes});
 
         res.status(200).json({status:200, message: 'success', description: req.body.description, themes: finalArray});
+    }
+    catch(err){
+        console.log(err);
+        res.status(404).json({status: 404, message: 'fail', data: err.message});
+    }
+}
+
+exports.CarFilters = async (req,res) => {
+    try{
+
+        let condition = {};
+
+        // brand will always come from the request
+        condition["Make"] = req.body.brand;
+
+        if (req.body.model){
+            condition["Model"] = req.body.model;
+        }
+        if (req.body.modelYear){
+            condition["Year"] = req.body.modelYear;
+        }
+        
+        // storing filters in an object and put it in a variable to be used in the URL
+        const where = encodeURIComponent(JSON.stringify(condition));
+
+        // Fetching Data from the 3rd party API of the database
+        const response = await fetch(
+        `https://parseapi.back4app.com/classes/Carmodels_Car_Model_List?limit=9840&where=${where}`,
+        {
+            headers: {
+            'X-Parse-Application-Id': 'bNtSJSD5FNQeA9pppIwEQi0IlhBMlTHIQhxltu6j', // This is your app's application id
+            'X-Parse-REST-API-Key': 'pMjmj8x6b6jMSeUVIkI9PJq9vRrPWyUASLPaL8AP', // This is your app's REST API key
+            }
+        }
+        );
+        const data = await response.json();
+        const cars = data.results
+
+
+        let yearValues, uniqueYears, modelValues, uniqueModels;
+        let finalData = {};
+
+        // if just brand, return unique years and models
+        if (!req.body.model && !req.body.modelYear){
+            console.log("Both are NOT PRESENT");
+
+            yearValues = cars.map(car => car.Year);
+            uniqueYears = [...new Set(yearValues)];
+
+            modelValues = cars.map(car => car.Model);
+            uniqueModels = [...new Set(modelValues)];
+
+            finalData.model = uniqueModels.sort();
+            finalData.modelYear = uniqueYears;
+        }
+
+        // if brand + model, return model years
+        if (req.body.model){
+            console.log("Model Year is NOT PRESENT");
+            yearValues = cars.map(car => car.Year);
+            uniqueYears = [...new Set(yearValues)];
+
+            finalData.modelYear = uniqueYears;
+        }
+
+        // if brand + model years, return models
+        if (req.body.modelYear){
+            console.log("Model is NOT PRESENT");
+            modelValues = cars.map(car => car.Model);
+            uniqueModels = [...new Set(modelValues)];
+
+            finalData.model = uniqueModels.sort();
+        }
+
+        res.status(200).json({status: 200, message: 'success', data: finalData});
     }
     catch(err){
         console.log(err);
