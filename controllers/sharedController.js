@@ -6,6 +6,7 @@ exports.GptDescription = async (req,res, next) => {
 
         let message = `As a professional seller, Generate a compelling sales description for this used car with the following characteristics. Brand: ${req.body.brand}, Model: ${req.body.model}, Model Year: ${req.body.modelYear}, First Registered: ${req.body.firstRegistered}, Mileage: ${req.body.mileage}, Fuel Type: ${req.body.fuelType}, Gearbox : ${req.body.gearbox}, Body type : ${req.body.bodyType}, Color : ${req.body.color}, Number of Doors:  ${req.body.numberOfDoors}, Number of Seats: ${req.body.numberOfSeats}, Engine size : ${req.body.engineSize}, Engine power  : ${req.body.enginePower}, EPA Ratings : ${req.body.epaRatings}, CO2 emissisions : ${req.body.co2Emissions}, Inside : ${req.body.inside}, Tyres: ${req.body.tyres}, Outside : ${req.body.outside}, Motor : ${req.body.motor}, Brakes: ${req.body.brakes}, Suspension: ${req.body.suspension}, Transmission : ${req.body.transmission}. Put emphasize on some characteristics and don't forget to mention that the user can come to see the car during available times.`
 
+
         const gptResponse = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
             messages: [{role: "user", content: message}]
@@ -20,7 +21,7 @@ exports.GptDescription = async (req,res, next) => {
     }
 }
 
-exports.GptThemes = async (req,res,next) => {
+exports.GptThemes = async (req,res) => {
     try{
         const openai = req.body.openai;
 
@@ -34,7 +35,9 @@ exports.GptThemes = async (req,res,next) => {
         });
 
         req.body.themes = gptResponse.data.choices[0].message.content;
-        next();
+
+        res.status(200).json({status:200, message: 'success', description: req.body.description, themes: req.body.themes});
+        // next();
     }
     catch(err){
         console.log(err);
