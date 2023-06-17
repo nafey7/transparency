@@ -21,7 +21,7 @@ exports.GptDescription = async (req,res, next) => {
     }
 }
 
-exports.GptThemes = async (req,res) => {
+exports.GptThemes = async (req,res,next) => {
     try{
         const openai = req.body.openai;
 
@@ -36,8 +36,8 @@ exports.GptThemes = async (req,res) => {
 
         req.body.themes = gptResponse.data.choices[0].message.content;
 
-        res.status(200).json({status:200, message: 'success', description: req.body.description, themes: req.body.themes});
-        // next();
+        // res.status(200).json({status:200, message: 'success', description: req.body.description, themes: req.body.themes});
+        next();
     }
     catch(err){
         console.log(err);

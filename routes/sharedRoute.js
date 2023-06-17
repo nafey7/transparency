@@ -6,7 +6,7 @@ const router = express.Router();
 
 router
 .route('/')
-.post(controller.GptDescription, controller.GptThemes);
+.post(controller.GptDescription, controller.GptThemes, controller.OrganizeData);
 
 router
 .route('/carfilter')
