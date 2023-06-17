@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
+const Company = require('../models/companyModel');
 
 // Protect the routes for users
 exports.Protect = async (req,res, next) => {
@@ -19,13 +20,20 @@ exports.Protect = async (req,res, next) => {
         const query = User.findById(userID);
         const UserFound = await query;
 
+        const querySecond = Company.findById(userID);
+        const CompanyFound = await querySecond;
+
         // If no user with the particular Identity is present in the database, return Error in response
-        if (!UserFound){
+        if (!UserFound && !CompanyFound){
             throw new Error ('No such user exists');
         }
-
-        req.body.userID = userID;
-
+        if (UserFound){
+            req.body.userID = userID;
+        }
+        else if (CompanyFound){
+            req.body.companyID = userID;
+        }
+        
         next();
 
     }

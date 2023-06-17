@@ -1,3 +1,5 @@
+const Car = require('../models/carModel');
+
 const fetch = require('node-fetch');
 
 exports.GptDescription = async (req,res, next) => {
@@ -27,8 +29,6 @@ exports.GptThemes = async (req,res,next) => {
 
         let message = `What is the list of different options in a ${req.body.modelYear}, ${req.body.gearbox}, ${req.body.engineSize}, ${req.body.enginePower}, ${req.body.brand}, ${req.body.model}. Classify the options in response into 6 themes.`;
 
-        // let message = `There are different options in a ${req.body.modelYear}, ${req.body.gearbox}, ${req.body.engineSize}, ${req.body.enginePower}, ${req.body.brand}, ${req.body.model}. Classify the options in response into 6 themes.`;
-
         const gptResponse = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
             messages: [{role: "user", content: message}]
@@ -36,7 +36,6 @@ exports.GptThemes = async (req,res,next) => {
 
         req.body.themes = gptResponse.data.choices[0].message.content;
 
-        // res.status(200).json({status:200, message: 'success', description: req.body.description, themes: req.body.themes});
         next();
     }
     catch(err){
@@ -45,7 +44,7 @@ exports.GptThemes = async (req,res,next) => {
     }
 }
 
-exports.OrganizeData = async (req,res) => {
+exports.OrganizeData = async (req,res,next) => {
     try{
         let themes = req.body.themes;
 
@@ -68,11 +67,7 @@ exports.OrganizeData = async (req,res) => {
         newArr = newArr.slice().reverse()
 
         elemArr = '';
-        // elemArr = newArr[0].split("-");
-
-
         let obj = {};
-
         let objectKey = '';
         let valuesArray = [];
         let finalArray = [];
@@ -95,12 +90,48 @@ exports.OrganizeData = async (req,res) => {
         }
         
 
-        console.log(finalArray);
-        // res.send(themes);
+        req.body.themes = finalArray;
+        
+        next();
         
         // res.status(200).json({status:200, message: 'success', themes: themes});
 
-        res.status(200).json({status:200, message: 'success', description: req.body.description, themes: finalArray});
+        // res.status(200).json({status:200, message: 'success', description: req.body.description, themes: finalArray});
+    }
+    catch(err){
+        console.log(err);
+        res.status(404).json({status: 404, message: 'fail', data: err.message});
+    }
+}
+
+
+exports.AutoSaveData = async (req,res) => {
+    try{
+        let userID;
+        let additionalInfo = {};
+
+        if (req.body.userID){
+            userID = req.body.userID
+        }
+        else if (req.body.companyID){
+            userID = req.body.companyID
+        }
+
+        const query = Car.create({
+            description: req.body.description,
+            themes: req.body.themes,
+            price: req.body.price,
+            location: req.body.location,
+            contact: req.body.contact,
+            previousOwners: req.body.previousOwners,
+            warrantyCoverage: req.body.warrantyCoverage,
+            vehicleInspection: req.body.vehicleInspection,
+            ownerID: userID
+        })
+        const saveData = await query;
+
+        res.status(200).json({status:200, message: 'success', data: saveData});
+
     }
     catch(err){
         console.log(err);
@@ -176,6 +207,26 @@ exports.CarFilters = async (req,res) => {
         }
 
         res.status(200).json({status: 200, message: 'success', data: finalData});
+    }
+    catch(err){
+        console.log(err);
+        res.status(404).json({status: 404, message: 'fail', data: err.message});
+    }
+}
+
+exports.UpdateGptResponse = async (req,res) => {
+    try{
+
+    }
+    catch(err){
+        console.log(err);
+        res.status(404).json({status: 404, message: 'fail', data: err.message});
+    }
+}
+
+exports.GetCarInformation = async (req,res) => {
+    try{
+
     }
     catch(err){
         console.log(err);
