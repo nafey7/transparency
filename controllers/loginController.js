@@ -40,7 +40,7 @@ exports.Login = async (req,res) => {
 
         const brand = ["Audi", "Chevrolet", "Cadillac", "Acura", "BMW", "Chrysler", "Ford", "Buick", "INFINITI", "GMC", "Honda", "Hyundai", "Jeep", "Genesis", "Dodge", "Jaguar", "Kia", "Land Rover", "Lexus", "Mercedes-Benz", "Mitsubishi", "Lincoln", "MAZDA", "Nissan", "MINI", "Porsche", "Ram", "Subaru", "Toyota", "Volkswagen", "Volvo", "Alfa Romeo", "FIAT", "Freightliner", "Maserati", "Tesla", "Aston Martin", "Bentley", "Ferrari", "Lamborghini", "Lotus", "McLaren", "Rolls-Royce", "smart", "Scion", "SRT", "Suzuki", "Fisker", "Maybach", "Mercury", "Saab", "HUMMER", "Pontiac", "Saturn", "Isuzu", "Panoz", "Oldsmobile", "Daewoo", "Plymouth", "Eagle", "Geo", "Daihatsu", "Polestar", "Rivian"];
 
-        res.status(201).json({status: 201, message: 'success', token: token, brand: brand, data: Login});
+        res.status(201).json({status: 201, message: 'success', token: token, entity: req.body.entity, brand: brand, data: Login});
     }
     catch(err){
         console.log(err);

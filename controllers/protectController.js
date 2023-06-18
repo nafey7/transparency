@@ -29,9 +29,11 @@ exports.Protect = async (req,res, next) => {
         }
         if (UserFound){
             req.body.userID = userID;
+            req.body.entity = "user";
         }
         else if (CompanyFound){
             req.body.companyID = userID;
+            req.body.entity = "company";
         }
         
         next();
