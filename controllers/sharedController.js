@@ -121,6 +121,7 @@ exports.AutoSaveData = async (req,res) => {
             description: req.body.description,
             themes: req.body.themes,
             price: req.body.price,
+            image: req.body.image,
             location: req.body.location,
             contact: req.body.contact,
             previousOwners: req.body.previousOwners,
@@ -224,7 +225,6 @@ exports.SaveGptResponse = async (req,res) => {
             userID = req.body.companyID;
         }
 
-        // const filter = {ownerID: userID};
         const filter = {_id: req.body.carID};
         let update = {};
 

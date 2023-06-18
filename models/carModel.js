@@ -11,6 +11,9 @@ const carSchema = new Schema({
     themes: {
         type: Array
     },
+    image: {
+        type: String
+    },
     price: {
         type: String
     },
