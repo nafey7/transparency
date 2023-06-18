@@ -214,9 +214,31 @@ exports.CarFilters = async (req,res) => {
     }
 }
 
-exports.UpdateGptResponse = async (req,res) => {
+exports.SaveGptResponse = async (req,res) => {
     try{
+        let userID;
+        if (req.body.userID){
+            userID = req.body.userID;
+        }
+        else if (req.body.companyID){
+            userID = req.body.companyID;
+        }
 
+        // const filter = {ownerID: userID};
+        const filter = {_id: req.body.carID};
+        let update = {};
+
+        if (req.body.description){
+            update.description = req.body.description;
+        }
+        if (req.body.themes){
+            update.themes = req.body.themes
+        }
+
+        const query = Car.findOneAndUpdate(filter, update, {new: true, runValidators: true});
+        const saveCarInfo = await query;
+
+        res.status(200).json({status:200, message: 'success', data: saveCarInfo});
     }
     catch(err){
         console.log(err);
@@ -226,7 +248,19 @@ exports.UpdateGptResponse = async (req,res) => {
 
 exports.GetCarInformation = async (req,res) => {
     try{
+        let userID;
+        if (req.body.userID){
+            userID = req.body.userID;
+        }
+        else if (req.body.companyID){
+            userID = req.body.companyID;
+        }
 
+        const filter = {ownerID: userID};
+        const query = Car.find(filter);
+        const carList = await query;
+
+        res.status(200).json({status: 200, message: 'success', data: carList});
     }
     catch(err){
         console.log(err);

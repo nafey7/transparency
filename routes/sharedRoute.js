@@ -11,6 +11,14 @@ router
 
 router
 .route('/carfilter')
-.post(controller.CarFilters)
+.post(protectController.Protect,controller.CarFilters);
+
+router
+.route('/savedata')
+.post(protectController.Protect,controller.SaveGptResponse);
+
+router
+.route('/carinfo')
+.post(protectController.Protect,controller.GetCarInformation);
 
 module.exports = router;
