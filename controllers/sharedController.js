@@ -264,7 +264,7 @@ exports.GetCarInformation = async (req,res) => {
         }
 
         const filter = {ownerID: userID};
-        const query = Car.find(filter);
+        const query = Car.find(filter).sort({ createdAt: -1 });
         const carList = await query;
 
         res.status(200).json({status: 200, message: 'success', data: carList});
