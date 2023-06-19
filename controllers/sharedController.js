@@ -5,10 +5,15 @@ const fetch = require('node-fetch');
 exports.GptDescription = async (req,res, next) => {
     try{
         const openai = req.body.openai;
+        let message;
 
-        let message = `As a professional seller, Generate a compelling sales description for this used car with the following characteristics. Brand: ${req.body.brand}, Model: ${req.body.model}, Model Year: ${req.body.modelYear}, First Registered: ${req.body.firstRegistered}, Mileage: ${req.body.mileage}, Fuel Type: ${req.body.fuelType}, Gearbox : ${req.body.gearbox}, Body type : ${req.body.bodyType}, Color : ${req.body.color}, Number of Doors:  ${req.body.numberOfDoors}, Number of Seats: ${req.body.numberOfSeats}, Engine size : ${req.body.engineSize}, Engine power  : ${req.body.enginePower}, EPA Ratings : ${req.body.epaRatings}, CO2 emissisions : ${req.body.co2Emissions}, Inside : ${req.body.inside}, Tyres: ${req.body.tires}, Outside : ${req.body.outside}, Motor : ${req.body.motor}, Brakes: ${req.body.brakes}, Suspension: ${req.body.suspension}, Transmission : ${req.body.transmission}. Put emphasize on some characteristics and don't forget to mention that the user can come to see the car during available times.`
-
-
+            if (req.body.epaRatings){
+            message = `As a professional seller, Generate a compelling sales description for this used car with the following characteristics. Brand: ${req.body.brand}, Model: ${req.body.model}, Model Year: ${req.body.modelYear}, First Registered: ${req.body.firstRegistered}, Mileage: ${req.body.mileage}, Fuel Type: ${req.body.fuelType}, Gearbox : ${req.body.gearbox}, Body type : ${req.body.bodyType}, Color : ${req.body.color}, Number of Doors:  ${req.body.numberOfDoors}, Number of Seats: ${req.body.numberOfSeats}, Engine size : ${req.body.engineSize}, Engine power  : ${req.body.enginePower}, EPA Ratings : ${req.body.epaRatings}, CO2 emissisions : ${req.body.co2Emissions}, Inside : ${req.body.inside}, Tyres: ${req.body.tires}, Outside : ${req.body.outside}, Motor : ${req.body.motor}, Brakes: ${req.body.brakes}, Suspension: ${req.body.suspension}, Transmission : ${req.body.transmission}. Put emphasize on some characteristics and don't forget to mention that the user can come to see the car during available times.`
+        }
+            else if (!req.body.epaRatings){
+            message = `As a professional seller, Generate a compelling sales description for this used car with the following characteristics. Brand: ${req.body.brand}, Model: ${req.body.model}, Model Year: ${req.body.modelYear}, First Registered: ${req.body.firstRegistered}, Mileage: ${req.body.mileage}, Fuel Type: ${req.body.fuelType}, Gearbox : ${req.body.gearbox}, Body type : ${req.body.bodyType}, Color : ${req.body.color}, Number of Doors:  ${req.body.numberOfDoors}, Number of Seats: ${req.body.numberOfSeats}, Engine size : ${req.body.engineSize}, Engine power  : ${req.body.enginePower}, CO2 emissisions : ${req.body.co2Emissions}, Inside : ${req.body.inside}, Tyres: ${req.body.tires}, Outside : ${req.body.outside}, Motor : ${req.body.motor}, Brakes: ${req.body.brakes}, Suspension: ${req.body.suspension}, Transmission : ${req.body.transmission}. Put emphasize on some characteristics and don't forget to mention that the user can come to see the car during available times.`
+        }
+        
         const gptResponse = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
             messages: [{role: "user", content: message}]
@@ -47,8 +52,6 @@ exports.GptThemes = async (req,res,next) => {
 exports.OrganizeData = async (req,res,next) => {
     try{
         let themes = req.body.themes;
-
-        // console.log(themes);
 
         let lines = themes.split("\n\n");
         let newArr = [];
@@ -93,10 +96,7 @@ exports.OrganizeData = async (req,res,next) => {
         req.body.themes = finalArray;
         
         next();
-        
-        // res.status(200).json({status:200, message: 'success', themes: themes});
 
-        // res.status(200).json({status:200, message: 'success', description: req.body.description, themes: finalArray});
     }
     catch(err){
         console.log(err);
@@ -117,9 +117,13 @@ exports.AutoSaveData = async (req,res) => {
             userID = req.body.companyID
         }
 
+        let nameOfCar = req.body.brand + " " + req.body.model;
+
         const query = Car.create({
             description: req.body.description,
+            name: nameOfCar,
             themes: req.body.themes,
+            mileage: req.body.mileage,
             price: req.body.price,
             image: req.body.image,
             location: req.body.location,
@@ -232,7 +236,10 @@ exports.SaveGptResponse = async (req,res) => {
             update.description = req.body.description;
         }
         if (req.body.themes){
-            update.themes = req.body.themes
+            update.themes = req.body.themes;
+        }
+        if (req.body.image){
+            update.image = req.body.image;
         }
 
         const query = Car.findOneAndUpdate(filter, update, {new: true, runValidators: true});
