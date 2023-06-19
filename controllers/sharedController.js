@@ -176,12 +176,11 @@ exports.CarFilters = async (req,res) => {
         const cars = data.results
 
 
-        let yearValues, uniqueYears, modelValues, uniqueModels;
+        let yearValues, uniqueYears, modelValues, uniqueModels, categoryValues, uniqueCategories;
         let finalData = {};
 
         // if just brand, return unique years and models
         if (!req.body.model && !req.body.modelYear){
-            console.log("Both are NOT PRESENT");
 
             yearValues = cars.map(car => car.Year);
             uniqueYears = [...new Set(yearValues)];
@@ -189,13 +188,16 @@ exports.CarFilters = async (req,res) => {
             modelValues = cars.map(car => car.Model);
             uniqueModels = [...new Set(modelValues)];
 
+            // categoryValues = cars.map(car => car.Category);
+            // uniqueCategories = [...new Set(categoryValues)];
+
             finalData.model = uniqueModels.sort();
             finalData.modelYear = uniqueYears;
+            // finalData.bodyType = uniqueCategories;
         }
 
         // if brand + model, return model years
         if (req.body.model){
-            console.log("Model Year is NOT PRESENT");
             yearValues = cars.map(car => car.Year);
             uniqueYears = [...new Set(yearValues)];
 
@@ -204,7 +206,6 @@ exports.CarFilters = async (req,res) => {
 
         // if brand + model years, return models
         if (req.body.modelYear){
-            console.log("Model is NOT PRESENT");
             modelValues = cars.map(car => car.Model);
             uniqueModels = [...new Set(modelValues)];
 
