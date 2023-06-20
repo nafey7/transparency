@@ -1,4 +1,5 @@
 const Car = require('../models/carModel');
+const fs = require('fs');
 
 const fetch = require('node-fetch');
 
@@ -32,7 +33,7 @@ exports.GptThemes = async (req,res,next) => {
     try{
         const openai = req.body.openai;
 
-        let message = `What is the list of different options in a ${req.body.modelYear}, ${req.body.gearbox}, ${req.body.engineSize}, ${req.body.enginePower}, ${req.body.brand}, ${req.body.model}. Classify the options in response into 6 themes.`;
+        let message = `What is the list of different options in a ${req.body.modelYear}, ${req.body.gearbox}, ${req.body.engineSize}, ${req.body.enginePower}, ${req.body.brand}, ${req.body.model}. Classify the options in response into 6 themes.`
 
         const gptResponse = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
@@ -57,7 +58,7 @@ exports.OrganizeData = async (req,res,next) => {
         let newArr = [];
         let elemArr;
 
-        // Getting proper array of strings
+        // Getting array of strings
         for (let i=lines.length -1;i>=0;i--){
             elemArr = lines[i];
             if (elemArr[0]+elemArr[1] == '1.' || elemArr[0]+elemArr[1] == '2.' || elemArr[0]+elemArr[1] == '3.' || elemArr[0]+elemArr[1] == '4.' || elemArr[0]+elemArr[1] == '5.' || elemArr[0]+elemArr[1] == '6.'){
@@ -83,7 +84,14 @@ exports.OrganizeData = async (req,res,next) => {
             valuesArray = [];
             obj = {};
         
-            objectKey = elemArr[0].slice(3, -1);
+            // objectKey = elemArr[0].slice(3, -1);
+
+            // Removing first 3 characters
+            objectKey = elemArr[0].slice(3);
+            // Removing the colon sign
+            objectKey = objectKey.replace(/:/g, "");
+            // Removing the extra space from the end
+            objectKey = objectKey.replace(/\s+/g, ' ').trim();
         
             for (let j=1;j<elemArr.length;j++){
               valuesArray.push(elemArr[j].slice(1))
@@ -108,7 +116,6 @@ exports.OrganizeData = async (req,res,next) => {
 exports.AutoSaveData = async (req,res) => {
     try{
         let userID;
-        let additionalInfo = {};
 
         if (req.body.userID){
             userID = req.body.userID
@@ -188,12 +195,9 @@ exports.CarFilters = async (req,res) => {
             modelValues = cars.map(car => car.Model);
             uniqueModels = [...new Set(modelValues)];
 
-            // categoryValues = cars.map(car => car.Category);
-            // uniqueCategories = [...new Set(categoryValues)];
 
             finalData.model = uniqueModels.sort();
             finalData.modelYear = uniqueYears;
-            // finalData.bodyType = uniqueCategories;
         }
 
         // if brand + model, return model years
