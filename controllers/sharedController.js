@@ -9,10 +9,10 @@ exports.GptDescription = async (req,res, next) => {
         let message;
 
             if (req.body.epaRatings){
-            message = `As a professional seller, Generate a compelling sales description for this used car with the following characteristics. Brand: ${req.body.brand}, Model: ${req.body.model}, Model Year: ${req.body.modelYear}, First Registered: ${req.body.firstRegistered}, Mileage: ${req.body.mileage}, Fuel Type: ${req.body.fuelType}, Gearbox : ${req.body.gearbox}, Body type : ${req.body.bodyType}, Color : ${req.body.color}, Number of Doors:  ${req.body.numberOfDoors}, Number of Seats: ${req.body.numberOfSeats}, Engine size : ${req.body.engineSize}, Engine power  : ${req.body.enginePower}, EPA Ratings : ${req.body.epaRatings}, CO2 emissisions : ${req.body.co2Emissions}, Inside : ${req.body.inside}, Tyres: ${req.body.tires}, Outside : ${req.body.outside}, Motor : ${req.body.motor}, Brakes: ${req.body.brakes}, Suspension: ${req.body.suspension}, Transmission : ${req.body.transmission}. Put emphasize on some characteristics and don't forget to mention that the user can come to see the car during available times.`
+            message = `As a professional seller, Generate a compelling sales description for this ${req.body.condition} car with the following characteristics. Brand: ${req.body.brand}, Model: ${req.body.model}, Model Year: ${req.body.modelYear}, First Registered: ${req.body.firstRegistered}, Mileage: ${req.body.mileage}, Fuel Type: ${req.body.fuelType}, Gearbox : ${req.body.gearbox}, Body type : ${req.body.bodyType}, Color : ${req.body.color}, Number of Doors:  ${req.body.numberOfDoors}, Number of Seats: ${req.body.numberOfSeats}, Engine size : ${req.body.engineSize}L, Engine power  : ${req.body.enginePower} bhp, EPA Ratings : ${req.body.epaRatings}, CO2 emissisions : ${req.body.co2Emissions}, Inside : ${req.body.inside}, Tyres: ${req.body.tires}, Outside : ${req.body.outside}, Motor : ${req.body.motor}, Brakes: ${req.body.brakes}, Suspension: ${req.body.suspension}, Transmission : ${req.body.transmission}. Put emphasize on some characteristics and don't forget to mention that the user can come to see the car during available times.`
         }
             else if (!req.body.epaRatings){
-            message = `As a professional seller, Generate a compelling sales description for this used car with the following characteristics. Brand: ${req.body.brand}, Model: ${req.body.model}, Model Year: ${req.body.modelYear}, First Registered: ${req.body.firstRegistered}, Mileage: ${req.body.mileage}, Fuel Type: ${req.body.fuelType}, Gearbox : ${req.body.gearbox}, Body type : ${req.body.bodyType}, Color : ${req.body.color}, Number of Doors:  ${req.body.numberOfDoors}, Number of Seats: ${req.body.numberOfSeats}, Engine size : ${req.body.engineSize}, Engine power  : ${req.body.enginePower}, CO2 emissisions : ${req.body.co2Emissions}, Inside : ${req.body.inside}, Tyres: ${req.body.tires}, Outside : ${req.body.outside}, Motor : ${req.body.motor}, Brakes: ${req.body.brakes}, Suspension: ${req.body.suspension}, Transmission : ${req.body.transmission}. Put emphasize on some characteristics and don't forget to mention that the user can come to see the car during available times.`
+            message = `As a professional seller, Generate a compelling sales description for this ${req.body.condition} car with the following characteristics. Brand: ${req.body.brand}, Model: ${req.body.model}, Model Year: ${req.body.modelYear}, First Registered: ${req.body.firstRegistered}, Mileage: ${req.body.mileage}, Fuel Type: ${req.body.fuelType}, Gearbox : ${req.body.gearbox}, Body type : ${req.body.bodyType}, Color : ${req.body.color}, Number of Doors:  ${req.body.numberOfDoors}, Number of Seats: ${req.body.numberOfSeats}, Engine size : ${req.body.engineSize}L, Engine power  : ${req.body.enginePower} bhp, CO2 emissisions : ${req.body.co2Emissions}, Inside : ${req.body.inside}, Tyres: ${req.body.tires}, Outside : ${req.body.outside}, Motor : ${req.body.motor}, Brakes: ${req.body.brakes}, Suspension: ${req.body.suspension}, Transmission : ${req.body.transmission}. Put emphasize on some characteristics and don't forget to mention that the user can come to see the car during available times.`
         }
         
         const gptResponse = await openai.createChatCompletion({
@@ -33,14 +33,17 @@ exports.GptThemes = async (req,res,next) => {
     try{
         const openai = req.body.openai;
 
-        let message = `What is the list of different options in a ${req.body.modelYear}, ${req.body.gearbox}, ${req.body.engineSize}, ${req.body.enginePower}, ${req.body.brand}, ${req.body.model}. Classify the options in response into 6 themes.`
+        let message = `What is the list of different options in a ${req.body.modelYear}, ${req.body.gearbox}, ${req.body.engineSize} L, ${req.body.enginePower} bhp, ${req.body.brand}, ${req.body.model}. Classify the options in response into 6 themes.`
 
         const gptResponse = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
+            // model: "gpt-4",
             messages: [{role: "user", content: message}]
         });
 
         req.body.themes = gptResponse.data.choices[0].message.content;
+
+        console.log(req.body.themes);
 
         next();
     }
@@ -83,8 +86,6 @@ exports.OrganizeData = async (req,res,next) => {
             objectKey = '';
             valuesArray = [];
             obj = {};
-        
-            // objectKey = elemArr[0].slice(3, -1);
 
             // Removing first 3 characters
             objectKey = elemArr[0].slice(3);
