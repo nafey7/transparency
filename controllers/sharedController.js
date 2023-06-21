@@ -6,6 +6,7 @@ const fetch = require('node-fetch');
 exports.GptDescription = async (req,res, next) => {
     try{
         const openai = req.body.openai;
+
         let message;
 
             if (req.body.epaRatings){
@@ -32,18 +33,20 @@ exports.GptDescription = async (req,res, next) => {
 exports.GptThemes = async (req,res,next) => {
     try{
         const openai = req.body.openai;
+        const format = "The different options available in a 2018, Automatic, 1.0 L, 161 bhp, BMW 3 Series can be classified into the following themes:\n\n1. Interior & Comfort:\n- Leather seats\n- Heated front seats\n- Memory function for driver's seat\n- Dual-zone automatic climate control\n- Power-adjustable front seats with lumbar support \n\n2. Safety & Security:\n- Lane departure warning\n- Forward collision warning\n- Automatic emergency braking\n- Adaptive cruise control\n- Parking sensors (front and rear)"
 
-        let message = `What is the list of different options in a ${req.body.modelYear}, ${req.body.gearbox}, ${req.body.engineSize} L, ${req.body.enginePower} bhp, ${req.body.brand}, ${req.body.model}. Classify the options in response into 6 themes.`
+        let message = `What is the list of different options in a ${req.body.modelYear}, ${req.body.gearbox}, ${req.body.engineSize} L, ${req.body.enginePower} bhp, ${req.body.brand}, ${req.body.model}. Your response should be in this format: ${format}. Classify the options in response into 6 themes. The response must have 6 themes`
 
         const gptResponse = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
-            // model: "gpt-4",
             messages: [{role: "user", content: message}]
         });
 
         req.body.themes = gptResponse.data.choices[0].message.content;
 
-        console.log(req.body.themes);
+        // console.log(req.body.themes);
+        // console.log('break');
+        console.log(JSON.stringify(req.body.themes));
 
         next();
     }
@@ -59,7 +62,7 @@ exports.OrganizeData = async (req,res,next) => {
 
         let lines = themes.split("\n\n");
         let newArr = [];
-        let elemArr;
+        let elemArr, elemArrSub;
 
         // Getting array of strings
         for (let i=lines.length -1;i>=0;i--){
@@ -67,7 +70,12 @@ exports.OrganizeData = async (req,res,next) => {
             if (elemArr[0]+elemArr[1] == '1.' || elemArr[0]+elemArr[1] == '2.' || elemArr[0]+elemArr[1] == '3.' || elemArr[0]+elemArr[1] == '4.' || elemArr[0]+elemArr[1] == '5.' || elemArr[0]+elemArr[1] == '6.'){
                 newArr.push(elemArr);
             }
-            if (elemArr[0]+elemArr[1] == '1.'){
+
+            if (elemArr.substring(0, 8) == 'Theme 1:' || elemArr.substring(0, 8) == 'Theme 2:' || elemArr.substring(0, 8) == 'Theme 3:' || elemArr.substring(0, 8) == 'Theme 4:' || elemArr.substring(0, 8) == 'Theme 5:' || elemArr.substring(0, 8) == 'Theme 6:'){
+                elemArrSub = elemArr.substring(6);
+                newArr.push(elemArrSub);
+            }
+            if (elemArr[0]+elemArr[1] == '1.' || elemArr.substring(0, 8) == 'Theme 1:'){
                 break;
             }
         }
