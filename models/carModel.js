@@ -40,6 +40,9 @@ const carSchema = new Schema({
     },
     ownerID: {
         type: String
+    },
+    link: {
+        type: String
     }
     
 },

@@ -38,7 +38,9 @@ exports.Login = async (req,res) => {
         // generating token for authorization
         const token = jwt.sign({id: Login._id}, 'transparency-secret');
 
-        const brand = ["Audi", "Chevrolet", "Cadillac", "Acura", "BMW", "Chrysler", "Ford", "Buick", "INFINITI", "GMC", "Honda", "Hyundai", "Jeep", "Genesis", "Dodge", "Jaguar", "Kia", "Land Rover", "Lexus", "Mercedes-Benz", "Mitsubishi", "Lincoln", "MAZDA", "Nissan", "MINI", "Porsche", "Ram", "Subaru", "Toyota", "Volkswagen", "Volvo", "Alfa Romeo", "FIAT", "Freightliner", "Maserati", "Tesla", "Aston Martin", "Bentley", "Ferrari", "Lamborghini", "Lotus", "McLaren", "Rolls-Royce", "smart", "Scion", "SRT", "Suzuki", "Fisker", "Maybach", "Mercury", "Saab", "HUMMER", "Pontiac", "Saturn", "Isuzu", "Panoz", "Oldsmobile", "Daewoo", "Plymouth", "Eagle", "Geo", "Daihatsu", "Polestar", "Rivian"];
+        let brand = ["Audi", "Chevrolet", "Cadillac", "Acura", "BMW", "Chrysler", "Ford", "Buick", "INFINITI", "GMC", "Honda", "Hyundai", "Jeep", "Genesis", "Dodge", "Jaguar", "Kia", "Land Rover", "Lexus", "Mercedes-Benz", "Mitsubishi", "Lincoln", "MAZDA", "Nissan", "MINI", "Porsche", "Ram", "Subaru", "Toyota", "Volkswagen", "Volvo", "Alfa Romeo", "FIAT", "Freightliner", "Maserati", "Tesla", "Aston Martin", "Bentley", "Ferrari", "Lamborghini", "Lotus", "McLaren", "Rolls-Royce", "smart", "Scion", "SRT", "Suzuki", "Fisker", "Maybach", "Mercury", "Saab", "HUMMER", "Pontiac", "Saturn", "Isuzu", "Panoz", "Oldsmobile", "Daewoo", "Plymouth", "Eagle", "Geo", "Daihatsu", "Polestar", "Rivian"];
+        // This sorting is done because the list item "smart" was placed at the end because the sort is case sensitive
+        brand.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 
         res.status(201).json({status: 201, message: 'success', token: token, entity: req.body.entity, brand: brand, data: Login});
     }

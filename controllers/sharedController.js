@@ -147,9 +147,12 @@ exports.AutoSaveData = async (req,res) => {
             previousOwners: req.body.previousOwners,
             warrantyCoverage: req.body.warrantyCoverage,
             vehicleInspection: req.body.vehicleInspection,
-            ownerID: userID
+            ownerID: userID,
+            link: ""
         })
         const saveData = await query;
+
+        const querySecond = Car.findOneAndUpdate({_id: saveData._id}, {link: `https://peaceful-wildwood-21605-03c7b93cc9e7.herokuapp.com/shared/${saveData._id}`}, {new: true, runValidators: true})
 
         res.status(200).json({status:200, message: 'success', data: saveData});
 
