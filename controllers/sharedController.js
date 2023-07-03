@@ -152,14 +152,31 @@ exports.AutoSaveData = async (req,res) => {
         })
         const saveData = await query;
 
-        const querySecond = Car.findOneAndUpdate({_id: saveData._id}, {link: `https://peaceful-wildwood-21605-03c7b93cc9e7.herokuapp.com/shared/${saveData._id}`}, {new: true, runValidators: true})
+        // `https://obscure-castle-15556-def9b74cb9a0.herokuapp.com/shared/viewcar/shared?carID=${saveData._id}`
 
-        res.status(200).json({status:200, message: 'success', data: saveData});
+        const querySecond = Car.findOneAndUpdate({_id: saveData._id}, {link: `http://localhost:8000/shared/viewcar/shared?carID=${saveData._id}`}, {new: true, runValidators: true});
+        const finalData = await querySecond;
+
+        res.status(200).json({status:200, message: 'success', data: finalData});
 
     }
     catch(err){
         console.log(err);
         res.status(404).json({status: 404, message: 'fail', data: err.message});
+    }
+}
+
+exports.ViewSharedCarInfo = async (req,res) => {
+    try{
+
+        const query = Car.findById(req.query.carID);
+        const carInfo = await query;
+
+        res.status(200).json({status:200, message: 'success', data: carInfo});
+    }
+    catch(err){
+        console.log(err);
+        res.status(404).json({status: 404, message: fail, data: err.message})
     }
 }
 
@@ -195,7 +212,7 @@ exports.CarFilters = async (req,res) => {
         const cars = data.results
 
 
-        let yearValues, uniqueYears, modelValues, uniqueModels, categoryValues, uniqueCategories;
+        let yearValues, uniqueYears, modelValues, uniqueModels;
         let finalData = {};
 
         // if just brand, return unique years and models

@@ -9,9 +9,9 @@ router
 .route('/')
 .post(protectController.Protect,controller.GptDescription, controller.GptThemes, controller.OrganizeData, controller.AutoSaveData);
 
-// router
-// .route('/')
-// .post(controller.GptDescription, controller.GptThemes);
+router
+.route('/viewcar/shared')
+.get(controller.ViewSharedCarInfo)
 
 router
 .route('/carfilter')
