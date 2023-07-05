@@ -11,7 +11,7 @@ router
 
 router
 .route('/viewcar/shared')
-.get(controller.ViewSharedCarInfo)
+.post(controller.ViewSharedCarInfo)
 
 router
 .route('/carfilter')
