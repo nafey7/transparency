@@ -152,9 +152,8 @@ exports.AutoSaveData = async (req,res) => {
         })
         const saveData = await query;
 
-        // `https://obscure-castle-15556-def9b74cb9a0.herokuapp.com/shared/viewcar/shared?carID=${saveData._id}`
 
-        const querySecond = Car.findOneAndUpdate({_id: saveData._id}, {link: `http://localhost:8000/shared/viewcar/shared?carID=${saveData._id}`}, {new: true, runValidators: true});
+        const querySecond = Car.findOneAndUpdate({_id: saveData._id}, {link: `http://127.0.0.1:5173/sharedescription?carID=${saveData._id}`}, {new: true, runValidators: true});
         const finalData = await querySecond;
 
         res.status(200).json({status:200, message: 'success', data: finalData});
@@ -169,7 +168,7 @@ exports.AutoSaveData = async (req,res) => {
 exports.ViewSharedCarInfo = async (req,res) => {
     try{
 
-        const query = Car.findById(req.query.carID);
+        const query = Car.findById(req.body.carID);
         const carInfo = await query;
 
         res.status(200).json({status:200, message: 'success', data: carInfo});
