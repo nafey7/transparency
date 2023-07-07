@@ -11,6 +11,9 @@ const carSchema = new Schema({
     themes: {
         type: Array
     },
+    characteristics: {
+        type: Schema.Types.Mixed
+    },
     image: {
         type: String
     },
