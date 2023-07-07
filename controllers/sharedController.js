@@ -137,24 +137,24 @@ exports.AutoSaveData = async (req,res) => {
         let nameOfCar = req.body.brand + " " + req.body.model;
 
         let characteristics = {
-            brand: req.body.brand,
-            model: req.body.model,
-            modelYear: req.body.modelYear,
+            brand: [req.body.brand],
+            model: [req.body.model],
+            modelYear: [req.body.modelYear],
             firstRegistered: req.body.firstRegistered,
             mileage: req.body.mileage,
-            fuelType: req.body.fuelType,
-            gearbox: req.body.gearbox,
-            bodyType: req.body.bodyType,
-            color: req.body.color,
-            numberOfDoors: req.body.numberOfDoors,
-            numberOfSeats: req.body.numberOfSeats,
+            fuelType: [req.body.fuelType],
+            gearbox: [req.body.gearbox],
+            bodyType: [req.body.bodyType],
+            color: [req.body.color],
+            numberOfDoors: [req.body.numberOfDoors],
+            numberOfSeats: [req.body.numberOfSeats],
             engineSize: req.body.engineSize,
             enginePower: req.body.enginePower,
             co2Emissions: req.body.co2Emissions
         }
 
         if (req.body.epaRatings){
-            characteristics.epaRatings = req.body.epaRatings;
+            characteristics.epaRatings = [req.body.epaRatings];
         }
 
         const query = Car.create({
