@@ -176,7 +176,7 @@ exports.AutoSaveData = async (req,res) => {
         const saveData = await query;
 
 
-        const querySecond = Car.findOneAndUpdate({_id: saveData._id}, {link: `http://127.0.0.1:5173/sharedescription?carID=${saveData._id}`}, {new: true, runValidators: true});
+        const querySecond = Car.findOneAndUpdate({_id: saveData._id}, {link: `https://clairetprecis.com/sharedescription?carID=${saveData._id}`}, {new: true, runValidators: true});
         const finalData = await querySecond;
 
         console.log("autosave data working");
